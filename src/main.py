@@ -71,20 +71,24 @@ class NeuralNetwork:
             a = self.activation(np.dot(a, self.weights[l]))
         return a
 
-
+N = 311029
+N_N = N - 100000
 dataInFile = open('/home/yury/BSTU/lab3/correctedNew')
 dataOutFile = open('/home/yury/BSTU/lab3/attacks')
-mainComponents = open('/home/yury/BSTU/lab3/mainComponents','w+')
+dataTestInFile = open('/home/yury/BSTU/lab3/forTestIn')
+dataTestOutFile = open('/home/yury/BSTU/lab3/forTestOut')
+### mainComponentsTrain = open('/home/yury/BSTU/lab3/mainComponentsTrain','w+')
+mainComponentsTest = open('/home/yury/BSTU/lab3/mainComponentsTest.txt','w+')
 main = open('/home/yury/BSTU/lab3/main','w+')
 lines = dataInFile.readlines()
 lines1 = dataOutFile.readlines()
 trainingData = list()
 outData = list()
-for i in range(0,311029):
+for i in range(0,N_N):
     t = float(lines1[i])
     outData.append(t)
-pca = PCA(n_components=20)
-for i in range(0,311029):
+pca = PCA(n_components=10)
+for i in range(0,N_N):
     params = lines[i].split(',')
     t = list()
     r = float(lines1[i])
@@ -96,10 +100,11 @@ print(trainingData.__len__())
 print(outData.__len__())
 fit = pca.fit(trainingData)
 features = pca.transform(trainingData)
+#mainComponentsTest.write('211029 10 1\n')
 for i in range(0,outData.__len__()):
     main.write(str(outData[i]) + '\n')
-    for j in range(0,20):
-        if(j!=19):
-            mainComponents.write(str(features[i][j]) + ':')
+    for j in range(0,10):
+        if(j!=9):
+            mainComponentsTest.write(('%.6f' % features[i][j]) + ' ')
         else:
-            mainComponents.write(str(features[i][j]) + '\n')
+            mainComponentsTest.write(('%.6f' % features[i][j]) + '\n')
